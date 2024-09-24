@@ -10,17 +10,25 @@
 #include <vector>
 #include <bitset>
 #include <sstream>
-
+#include <fstream>
 using namespace std;
 void skaityti();
 void naudojimosiInstrukcija();
 string hashFunkcija(string input);
 unsigned long long int rightRotate (unsigned long long int reiksme, unsigned long long int d);
 unsigned long long int leftRotate (unsigned long long int reiksme, unsigned long long int d);
+void failuGeneravimas();
+void failasSuVienuSimboliu(const std::string& fileName, char c);
+void randomFailas1000(const std::string& fileName, int ilgis);
+void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string& fileName2, int ilgis);
+void tusciasFailas(const std::string& fileName);
 int main()
-{   string output;
-    cout << hashFunkcija("Lietuva");
-    cout << hashFunkcija("lietuva");
+{  
+    srand( static_cast<unsigned int>(time(nullptr)));
+    string output;
+    failuGeneravimas();
+//    cout << hashFunkcija("Lietuva");
+//    cout << hashFunkcija("lietuva");
       //naudojimosiInstrukcija();
   
     //skaityti();
@@ -59,23 +67,27 @@ void naudojimosiInstrukcija()
 
 }
 
-// void skaityti()
-// {
-//     vector<string> galimiFailai = {"pirmas.txt", "antras.txt", "trecias.txt"};
-//     int rinktis;
-//     string failas;
+ void skaityti()
+ {
+     vector<string> galimiFailai = {"simbolis1.txt", "simbolis2.txt", "random1000v.txt", "random1000du.txt", "tukstsimb1.txt", "tukstsimb2.txt"};
+     int rinktis;
+     string failas;
 
 
-//     //cout << "Pasirinkite faila, is kurio norite, kad butu skaitomi duomenys: \n";
-//     for (const auto& file : galimiFailai) {
-//         int i = 1;
-//         std::cout << i << " - " << file << std::endl;
-//         i++;
-//     }
-//     cin >> rinktis;
-//     failas = galimiFailai[rinktis - 1];
+     cout << "Pasirinkite faila, is kurio norite, kad butu skaitomi duomenys: \n";
+     for (const auto& file : galimiFailai) {
+         int i = 1;
+         std::cout << i << " - " << file << std::endl;
+         i++;
+     }
+     cin >> rinktis;
+     failas = galimiFailai[rinktis - 1];
+     ifstream fd(failas);
+     
+     
+     fd.close();
 
-// }
+ }
 
 string hashFunkcija(string input)
 {
@@ -85,7 +97,7 @@ string hashFunkcija(string input)
     int sk1 = 1+pow(paskutinis*2, 2);
     int sk2 = 16+pow(paskutinis/2, 3);
     cout << sk1 << " " << sk2 << endl;
-    vector<unsigned long long> outputHash = {0, 0, 0, 0};
+    vector<unsigned long long> outputHash = {333, 444, 555, 999};
     unsigned long long int suma = 0;        // hasho suma
     // visu pirma, sumaisom simbolius tarpusavyje
 //    for (int i = 0; i + 3 < input.size(); ++i)
@@ -199,4 +211,52 @@ int binTodec(int sk)
     return des_sk;
     
 }
-
+void failuGeneravimas()
+{
+    failasSuVienuSimboliu("simbolis1.txt", 'A'+rand()%26);
+    failasSuVienuSimboliu("simbolis2.txt", 'A'+rand()%26);
+    randomFailas1000("random1000v", 1000);
+    randomFailas1000("random1000du", 1000);
+    failas1000SuVienuSkirtingu("tukstsimb1.txt", "tukstsimb2.txt", 1000);
+    tusciasFailas("tuscias.txt");
+    
+    
+}
+void failasSuVienuSimboliu(const std::string& fileName, char c) {
+    std::ofstream fr(fileName);
+    fr << c;
+    fr.close();
+}
+void randomFailas1000(const std::string& fileName, int ilgis)
+{
+    ofstream fr(fileName);
+    for(int i = 0;i < ilgis; i++)
+    {
+        char randomSimb = ' ' + rand() % 95;
+        fr << randomSimb;
+    }
+    fr.close();
+}
+void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string& fileName2, int ilgis)
+{
+    ofstream f1("tukstsimb1.txt");
+    ofstream f2("tukstsimb2.txt");
+    for(int i = 0; i < ilgis; i++)
+    {
+        if(i==(ilgis/2))
+        {
+            f1<< 'Q';
+            f2 << 'R';
+        }
+        char randomSimb = ' ' + rand()%95;
+        f1<< randomSimb;
+        f2 << randomSimb;
+    }
+    f1.close();
+    f2.close();
+}
+void tusciasFailas(const std::string& fileName)
+{
+    ofstream fr(fileName);
+    fr.close();
+}
