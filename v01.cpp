@@ -11,6 +11,8 @@
 #include <bitset>
 #include <sstream>
 #include <fstream>
+
+
 using namespace std;
 string skaityti();
 void naudojimosiInstrukcija();
@@ -22,37 +24,41 @@ void failasSuVienuSimboliu(const std::string& fileName, char c);
 void randomFailas1000(const std::string& fileName, int ilgis);
 void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string& fileName2, int ilgis);
 void tusciasFailas(const std::string& fileName);
+void konstitucijosTestavimas();
 int main()
 {  
     srand( static_cast<unsigned int>(time(nullptr)));
     string output;
-    cout << hashFunkcija("lietuva") << endl;
-    cout << hashFunkcija("lietuva") << endl;;
+//    cout << hashFunkcija("lietuva") << endl;
+//    cout << hashFunkcija("Lietuva") << endl;
+//    cout << hashFunkcija("Lietuva!") << endl;
     //cout << static_cast<unsigned long long>('a') << endl;
     //hashinimas("Lietuva");
-    failuGeneravimas();
-   string input = skaityti();
-    cout << hashFunkcija(input);
+    //failuGeneravimas();
+//   string input = skaityti();
+//    cout << hashFunkcija(input);
     //cout << hashFunkcija("Lietuva");
    //cout << hashFunkcija("lietuva");
-      //naudojimosiInstrukcija();
+      naudojimosiInstrukcija();
   
     //skaityti();
     return 0;
 }
 void naudojimosiInstrukcija()
 {
+    
     int rinktis;    // komandos parinkimas
-    cout << "Pasirinkite:" << endl;
-    cout << "1 - ivestis ranka\n";
-    cout << "2 - ivestis is failo\n";
-    cout << "3 - generuoti failus\n";
-    cout << "4 - avalanche testavimas\n";
-    cout << "5 - atsparumas kolizijai\n";
-    cout << "6 - konstitucijos testavimas\n";
-    cout << "7 - baigti darba\n";
-    cin >> rinktis;
-    while(!cin>>rinktis || rinktis < 1 || rinktis > 7)
+    do{
+        cout << "Pasirinkite:" << endl;
+        cout << "1 - ivestis ranka\n";
+        cout << "2 - ivestis is failo\n";
+        cout << "3 - generuoti failus\n";
+        cout << "4 - avalanche testavimas\n";
+        cout << "5 - atsparumas kolizijai\n";
+        cout << "6 - konstitucijos testavimas\n";
+        cout << "7 - baigti darba\n";
+        cin >> rinktis;
+        while(!cin>>rinktis || rinktis < 1 || rinktis > 7)
         {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -60,16 +66,38 @@ void naudojimosiInstrukcija()
             cin >> rinktis;
             
         }
+        
+        switch (rinktis)
+        {
+            case 1:{
+                string tekstas;
+                cout << "Irasykite norima teksta: \n";
+                getline(cin,tekstas);
+                cout << "Ivestas tekstas: \n" << tekstas << endl;
+                cout << "Sio teksto hash:\n" << hashFunkcija(tekstas) << endl;
+                break;}
+            case 2:{
+                string tekstas = skaityti();
+                cout << hashFunkcija(tekstas) << endl;
+                break;
+            }
+            case 3:{
+                failuGeneravimas();
+                break;
+            }
+            case 4:{
+                break;
+            }
+            case 5:{
+                break;
+            }
+            case 6:{
+                konstitucijosTestavimas();
+                break;
+            }
+        }
+    }while(rinktis!=7);
 
-    switch (rinktis)
-    {
-    case 1:{
-        string tekstas;
-        cout << "Irasykite norima teksta: \n";
-        getline(cin,tekstas);
-        cout << "Ivestas tekstas: \n" << tekstas << endl;
-        break;}
-    }
 
 }
 
@@ -87,13 +115,36 @@ string skaityti()
          
      }
      cin >> rinktis;
+    while(!cin>>rinktis || rinktis < 1 || rinktis > 7)
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Klaida! Turite pasirinkti nuo 1 iki 7: \n";
+        cin >> rinktis;
+        
+    }
+    
      failas = galimiFailai[rinktis - 1];
      ifstream fd(failas);
-     std::stringstream buffer;
-     buffer << fd.rdbuf();
-
-     input = buffer.str();
-     
+    try {
+         if (!fd)
+             throw runtime_error("Failas neegzistuoja arba nepasiekiamas.");
+     } catch(const std::exception& e) {
+         cerr << "Klaida: " << failas << e.what() << endl;
+         
+     }
+    if(fd.peek()==ifstream::traits_type::eof())
+    {
+        input ="da39a3ee5e6b4b0d3255bfef95601890afd80709";
+    }
+    else
+    {
+        std::stringstream buffer;
+        buffer << fd.rdbuf();
+        
+        
+        input = buffer.str();
+    }
      fd.close();
     return input;
 
@@ -162,7 +213,7 @@ void failuGeneravimas()
     failasSuVienuSimboliu("simbolis2.txt", 'A'+rand()%26);
     randomFailas1000("random1000v.txt", 1000);
     randomFailas1000("random1000du.txt", 1000);
-    failas1000SuVienuSkirtingu("tukstsimb1.txt", "tukstsimb2.txt", 1000);
+    failas1000SuVienuSkirtingu("tukstsimb1.txt","tukstsimb2.txt", 1000);
     tusciasFailas("tuscias.txt");
     
     
@@ -205,3 +256,43 @@ void tusciasFailas(const std::string& fileName)
     ofstream fr(fileName);
     fr.close();
 }
+void konstitucijosTestavimas()
+{
+    vector<string> eilutes;
+    string eilute;
+    ifstream fd("konstitucija.txt");
+    try {
+         if (!fd)
+             throw runtime_error("failas neegzistuoja arba nepasiekiamas.");
+     } catch(const std::exception& e) {
+         cerr << "Klaida: konsttitucija.txt " << e.what() << endl;
+         return;
+     }
+    while(getline(fd, eilute))
+    {
+        eilutes.push_back(eilute);
+    }
+    fd.close();
+    
+    for(int i = 1; i <= eilutes.size(); i*=2)
+    {
+        int kartai = 5;
+        auto start = std::chrono::high_resolution_clock::now();
+        for(int j= 0; j < kartai; ++j)
+        {
+            string eil;
+            for(int m = 0; m < i && m < eilutes.size(); ++m)
+            {
+                eil+=eilutes[m];
+                
+            }
+            string hashas = hashFunkcija(eil);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> laikas = end - start;
+        cout << "Eilučių kiekis: " << i << " | Hashavimo vidutinis laikas: " << laikas.count() / kartai << endl;
+        
+    }
+    
+}
+//string gautiString(
