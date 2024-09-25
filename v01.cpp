@@ -12,7 +12,7 @@
 #include <sstream>
 #include <fstream>
 using namespace std;
-void skaityti();
+string skaityti();
 void naudojimosiInstrukcija();
 string hashFunkcija(string input);
 unsigned long long int rightRotate (unsigned long long int reiksme, unsigned long long int d);
@@ -26,9 +26,15 @@ int main()
 {  
     srand( static_cast<unsigned int>(time(nullptr)));
     string output;
+    cout << hashFunkcija("lietuva") << endl;
+    cout << hashFunkcija("lietuva") << endl;;
+    //cout << static_cast<unsigned long long>('a') << endl;
+    //hashinimas("Lietuva");
     failuGeneravimas();
-//    cout << hashFunkcija("Lietuva");
-//    cout << hashFunkcija("lietuva");
+   string input = skaityti();
+    cout << hashFunkcija(input);
+    //cout << hashFunkcija("Lietuva");
+   //cout << hashFunkcija("lietuva");
       //naudojimosiInstrukcija();
   
     //skaityti();
@@ -67,127 +73,66 @@ void naudojimosiInstrukcija()
 
 }
 
- void skaityti()
+string skaityti()
  {
-     vector<string> galimiFailai = {"simbolis1.txt", "simbolis2.txt", "random1000v.txt", "random1000du.txt", "tukstsimb1.txt", "tukstsimb2.txt"};
+    string input;
+     vector<string> galimiFailai = {"simbolis1.txt", "simbolis2.txt", "random1000v.txt", "random1000du.txt", "tukstsimb1.txt", "tukstsimb2.txt", "tuscias.txt"};
      int rinktis;
      string failas;
 
 
      cout << "Pasirinkite faila, is kurio norite, kad butu skaitomi duomenys: \n";
-     for (const auto& file : galimiFailai) {
-         int i = 1;
-         std::cout << i << " - " << file << std::endl;
-         i++;
+    for (int i = 0; i < galimiFailai.size(); i++) {
+         std::cout << i+1 << " - " << galimiFailai[i] << std::endl;
+         
      }
      cin >> rinktis;
      failas = galimiFailai[rinktis - 1];
      ifstream fd(failas);
-     
+     std::stringstream buffer;
+     buffer << fd.rdbuf();
+
+     input = buffer.str();
      
      fd.close();
+    return input;
 
  }
-
 string hashFunkcija(string input)
 {
-    
-    int paskutinis = int(input.length())-1;
-    vector<string> bituMasyvas;
-    int sk1 = 1+pow(paskutinis*2, 2);
-    int sk2 = 16+pow(paskutinis/2, 3);
-    cout << sk1 << " " << sk2 << endl;
-    vector<unsigned long long> outputHash = {333, 444, 555, 999};
-    unsigned long long int suma = 0;        // hasho suma
-    // visu pirma, sumaisom simbolius tarpusavyje
-//    for (int i = 0; i + 3 < input.size(); ++i)
-//    {
-//        
-//            swap(input[i], input[i+3]);
-//        
-//    }
-    cout << input << endl;
-    // 2 zingsnis - zaidziam su bitais
-    
+    const unsigned long long sk1 = 0x100000001b3; //1099511628211 pirminis
+    const unsigned long long sk2 = 0xab5351bc652b4e61;
+    //12345300873145699937 pirminis sk
+    vector<unsigned long long> outputHash(4, 0);
     for(int i = 0; i < input.length(); i++)
     {
-        char dabSimb = input.at(i);
-        cout << "nepakeistas" << endl << (std::bitset<64>) dabSimb << endl;
-                std::bitset<64> desChar = rightRotate(dabSimb+i+1, 8);
-        //cout << dabSimb* 73939 << endl;
-        std::bitset<64> random1 = rightRotate(dabSimb*(sk1+i), 16);
-//        cout << desChar << endl;
-//        cout << random1 << endl;
-        std::bitset<64> jungSimb = input.at(paskutinis);
-        //cout  << "p " << jungSimb << endl;
-        std::bitset<64> random2 = leftRotate(dabSimb*(sk2+i), 16);
-//        cout << random2;
-//        cout << endl;
-        std::bitset<64> XORjungimas1 = desChar^jungSimb;
-        //cout << XORjungimas1 << endl;
-        std::bitset<64> XORjungimas2 = random1^random2;
-//        cout << XORjungimas2 << endl;
-//        cout << std::bitset<64>(XORjungimas1^XORjungimas2) << endl;
-        std::bitset<64> kairChar = rightRotate(paskutinis, 8);
-        std::bitset<64> finalinis = XORjungimas1^XORjungimas2^kairChar;
-        std::bitset<64> diff = finalinis.to_ullong() - 256 * pow(876, i);
-        outputHash[i%4] += leftRotate(diff.to_ullong(), 8191);
-//        outputHash[i % 4] ^= desChar ^ random1 ^ random2;
-//        outputHash[i % 4] += simbolioReiksme * (sk1 + sk2);
-        if (i + 1 < input.length()/2) {
-                    paskutinis--;
-                }
-                else if (i + 1 > input.length()/2) {
-                    paskutinis++;
-                }
-                else {
-                    paskutinis = 0;
-                }
+        char dabSimb = input[i];
+        unsigned long long reiksme = static_cast<unsigned long long>(dabSimb);
+        for(int j = 0; j < 4; j++)
+        {
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j] ^= reiksme;
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j]*= sk1;
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j] = leftRotate(outputHash[j], 13);
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j]^=rightRotate(outputHash[(j+1)%4], 17);
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+//            cout << endl;
+            reiksme *= sk2;
+        }
     }
-    
-
-    unsigned long long int hash = 5381;
-    // pasiverciam inputa i bitus
-//      for (std::size_t i = 0; i < input.size(); ++i)
-//  {
-//      
-//      bitset<64> bitai(input.c_str()[i]);
-//      bituMasyvas.push_back(bitai.to_string());
-//  }
-  for (const auto& bits : bituMasyvas) {
-        std::cout << bits << " ";
-    }
-    cout << endl;
-//  for (std::size_t i = 0; i +3 < input.size(); ++i)
-//  {
-//      
-//          swap(bituMasyvas[i], bituMasyvas[i+3]);
-//      
-//  }
-    
-    
-    for (const auto& bits : bituMasyvas) {
-       std::cout << bits << " ";
-   }
-    cout << endl;
-
-
- for (std::size_t i = 0; i < input.size(); ++i) {
-        hash = ((hash << 5) + hash) + input.c_str()[i];
-    }
-   
-    cout << endl;
     std::stringstream ss;
     for (const auto& val : outputHash) {
             ss << std::hex << std::setfill('0') << std::setw(16) << val;
         }
     
         return ss.str();
-
-
-   // return std::to_string(hash);
-
+    
 }
+
+
 unsigned long long int rightRotate (unsigned long long int reiksme, unsigned long long int d) {
     return (reiksme >> d) | (reiksme << (64 - d));
 }
@@ -215,8 +160,8 @@ void failuGeneravimas()
 {
     failasSuVienuSimboliu("simbolis1.txt", 'A'+rand()%26);
     failasSuVienuSimboliu("simbolis2.txt", 'A'+rand()%26);
-    randomFailas1000("random1000v", 1000);
-    randomFailas1000("random1000du", 1000);
+    randomFailas1000("random1000v.txt", 1000);
+    randomFailas1000("random1000du.txt", 1000);
     failas1000SuVienuSkirtingu("tukstsimb1.txt", "tukstsimb2.txt", 1000);
     tusciasFailas("tuscias.txt");
     
@@ -245,7 +190,7 @@ void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string&
     {
         if(i==(ilgis/2))
         {
-            f1<< 'Q';
+            f1<< 'A';
             f2 << 'R';
         }
         char randomSimb = ' ' + rand()%95;
