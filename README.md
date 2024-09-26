@@ -74,3 +74,7 @@ unsigned long long int rightRotate (unsigned long long int reiksme, unsigned lon
 | 128 | 0,000485842 |
 | 256 | 0,0013013 |
 | 512 | 0,00335817 | 
+
+## Kolizijų testavimas
+<img width="266" alt="Screenshot 2024-09-26 at 14 26 50" src="https://github.com/user-attachments/assets/78a6d49e-0fc0-4cc6-8d02-65ebf6cb1513">
+
