@@ -11,7 +11,9 @@
 #include <bitset>
 #include <sstream>
 #include <fstream>
-
+#include <string>
+#include <random>
+#include <ctime>
 
 using namespace std;
 string skaityti();
@@ -25,6 +27,8 @@ void randomFailas1000(const std::string& fileName, int ilgis);
 void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string& fileName2, int ilgis);
 void tusciasFailas(const std::string& fileName);
 void konstitucijosTestavimas();
+string gautiString(int ilgis);
+
 int main()
 {  
     srand( static_cast<unsigned int>(time(nullptr)));
@@ -39,8 +43,8 @@ int main()
 //    cout << hashFunkcija(input);
     //cout << hashFunkcija("Lietuva");
    //cout << hashFunkcija("lietuva");
-      naudojimosiInstrukcija();
-  
+     // naudojimosiInstrukcija();
+    //cout << 4%4 << endl;
     //skaityti();
     return 0;
 }
@@ -72,7 +76,8 @@ void naudojimosiInstrukcija()
             case 1:{
                 string tekstas;
                 cout << "Irasykite norima teksta: \n";
-                getline(cin,tekstas);
+                //getline(cin,tekstas);
+                cin >> tekstas;
                 cout << "Ivestas tekstas: \n" << tekstas << endl;
                 cout << "Sio teksto hash:\n" << hashFunkcija(tekstas) << endl;
                 break;}
@@ -163,11 +168,11 @@ string hashFunkcija(string input)
         {
 //            cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j] ^= reiksme;
-//            cout << (std::bitset<64>) outputHash[j] << endl;
+//           cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j]*= sk1;
-//            cout << (std::bitset<64>) outputHash[j] << endl;
+            cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j] = leftRotate(outputHash[j], 13);
-//            cout << (std::bitset<64>) outputHash[j] << endl;
+            cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j]^=rightRotate(outputHash[(j+1)%4], 17);
 //            cout << (std::bitset<64>) outputHash[j] << endl;
 //            cout << endl;
@@ -295,4 +300,21 @@ void konstitucijosTestavimas()
     }
     
 }
-//string gautiString(
+string gautiString(int ilgis)
+{
+    static const char alphanum[] = "0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
+    string atsitiktinis_string;
+    atsitiktinis_string.reserve(ilgis);
+    int dydis = 62;
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<int> distrib(0, dydis - 1);
+    for(int i = 0; i < ilgis; i++)
+    {
+        atsitiktinis_string+=alphanum[distrib(generator)];
+    }
+    return atsitiktinis_string;
+}
+
