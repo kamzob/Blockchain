@@ -31,6 +31,9 @@ string gautiString(int ilgis);
 void kolizijosTestavimas();
 void AvalancheTestavimas();
 void generuotiPorasSuVienuSkirtingu();
+string hexToBin(string hex);
+double bituLyginimas(string hashB1, string hashB2);
+double hexLyginimas(string hash1, string hash2);
 
 int main()
 {  
@@ -390,7 +393,7 @@ void AvalancheTestavimas()
         cerr << "Nepavyko atidaryti inputForAvalanche.txt failo" << endl;
         return;
         }
-    int poruSk;
+    int poruSk = 0;
     double skirtingumasBitu = 0.0;
     double skirtingumasHex = 0.0;
     double minBitSkirtumas = 100.0;
@@ -400,12 +403,37 @@ void AvalancheTestavimas()
     
     while(fd >> str1 >> str2)
     {
+       
         string hash1 = hashFunkcija(str1);
         string hash2 = hashFunkcija(str2);
+        double skBitu = bituLyginimas(hexToBin(hash1), hexToBin(hash2));
+        skirtingumasBitu+=skBitu;
+        if(skBitu == 0)
+        {
+            cout << str1 << str2 << endl;
+            cout << hash1 << endl;
+            cout << hash2 << endl;
+        }
+        minBitSkirtumas = min(minBitSkirtumas, skBitu);
+        maxBituSkirtumas=max(maxBituSkirtumas, skBitu);
+        double skHex = hexLyginimas(hash1, hash2);
+        skirtingumasHex+=skHex;
+        minxHexSkirtumas= min(minxHexSkirtumas, skHex);
+        maxHexSkirtumas = max(maxHexSkirtumas, skHex);
+        poruSk++;
         
     }
     
     fd.close();
+    cout << "Avalanche testas baigtas! Rezultatai: \n";
+    cout << "Patikrinta poru: " << poruSk << endl;
+    cout << "Vidutinis skirtumas bitų lygmenyje: " << ((skirtingumasBitu / poruSk)/256.0)*100.0 << "%" << endl;
+    cout << "Minimalus skirtumas bitų lygmenyje: " << (minBitSkirtumas/256.0)*100.0 << "%" << endl;
+    cout << "Maksimalus skirtumas bitų lygmenyje: " << (maxBituSkirtumas/256.0)*100.0 << "%" << endl;
+    cout << "Vidutinis skirtumas hex lygmenyje: " << ((skirtingumasHex / poruSk)/64.0)*100.0 << "%" << endl;
+    cout << "Minimalus skirtumas hex lygmenyje: " << (minxHexSkirtumas/64.0)*100.0 << "%" << endl;
+    cout << "Maksimalus skirtumas hex lygmenyje: " << (maxHexSkirtumas/64.0)*100.0 << "%" << endl;
+    
     
 }
 void generuotiPorasSuVienuSkirtingu()
@@ -420,7 +448,11 @@ void generuotiPorasSuVienuSkirtingu()
             string str1 = gautiString(ilgis);
             string str2 = str1;
             int keiciamoSimboloIndeksas = rand() % ilgis;
-            str2[keiciamoSimboloIndeksas] = 'A' + (rand() % 26);
+            char naujSimb;
+            do{
+                naujSimb = 'A' + (rand() % 26);
+            }while(str1[keiciamoSimboloIndeksas]==naujSimb);
+            str2[keiciamoSimboloIndeksas] = naujSimb;
             fr << str1 << " " << str2 << endl;
         }
     }
