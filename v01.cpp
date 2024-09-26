@@ -28,6 +28,7 @@ void failas1000SuVienuSkirtingu(const std::string& fileName1, const std::string&
 void tusciasFailas(const std::string& fileName);
 void konstitucijosTestavimas();
 string gautiString(int ilgis);
+void kolizijosTestavimas();
 
 int main()
 {  
@@ -43,7 +44,7 @@ int main()
 //    cout << hashFunkcija(input);
     //cout << hashFunkcija("Lietuva");
    //cout << hashFunkcija("lietuva");
-     // naudojimosiInstrukcija();
+      naudojimosiInstrukcija();
     //cout << 4%4 << endl;
     //skaityti();
     return 0;
@@ -94,6 +95,7 @@ void naudojimosiInstrukcija()
                 break;
             }
             case 5:{
+                kolizijosTestavimas();
                 break;
             }
             case 6:{
@@ -170,9 +172,9 @@ string hashFunkcija(string input)
             outputHash[j] ^= reiksme;
 //           cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j]*= sk1;
-            cout << (std::bitset<64>) outputHash[j] << endl;
+           // cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j] = leftRotate(outputHash[j], 13);
-            cout << (std::bitset<64>) outputHash[j] << endl;
+           // cout << (std::bitset<64>) outputHash[j] << endl;
             outputHash[j]^=rightRotate(outputHash[(j+1)%4], 17);
 //            cout << (std::bitset<64>) outputHash[j] << endl;
 //            cout << endl;
@@ -317,4 +319,55 @@ string gautiString(int ilgis)
     }
     return atsitiktinis_string;
 }
-
+void generuotiAtsitiktinesPoras()
+{
+    ofstream fr("atsitiktinesporos.txt");
+    vector<int> ilgiai = {10, 100, 500, 1000};
+    for(int i = 0; i < 4; i++)
+    {
+        int ilgis = ilgiai.at(i);
+        for(int j = 0; j < 25000; ++j)
+        {
+            string str1 = gautiString(ilgis);
+            string str2 = gautiString(ilgis);
+            while (str1 == str2) {
+                str1 =  gautiString(ilgis);
+                str2 =  gautiString(ilgis);
+            }
+            fr << str1 << " " << str2 << endl;
+        }
+    }
+    fr.close();
+}
+void kolizijosTestavimas()
+{
+    int rinktis;
+    cout << "Ar norite sugeneruoti failai su atsitiktinemis poromis, ar jau turite? Jei norite, spauskite 1, jei jau turite spauskite 2:" << endl;
+    cin >> rinktis;
+    if(rinktis == 1)
+    {
+        generuotiAtsitiktinesPoras();
+    }
+    ifstream fd("atsitiktinesporos.txt");
+    if (!fd) {
+        cerr << "Nepavyko atidaryti atsitiktinesporos.txt failo" << endl;
+        return;
+        }
+    string str1, str2;
+    int kolizijuSk = 0;
+    int poruSk = 0;
+    while(fd >> str1 >> str2)
+    {
+        poruSk++;
+        string hash1 = hashFunkcija(str1);
+        string hash2 = hashFunkcija(str2);
+        if (hash1 == hash2) {
+            kolizijuSk++;
+            cout << "Kolizija aptikta! String 1: " << str1 << " | String 2: " << str2 << endl;
+                }
+    }
+    fd.close();
+    cout << "Viso patikrinta porų: " << poruSk << endl;
+    cout << "Viso aptikta kolizijų: " << kolizijuSk << endl;
+    
+}
