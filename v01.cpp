@@ -29,6 +29,8 @@ void tusciasFailas(const std::string& fileName);
 void konstitucijosTestavimas();
 string gautiString(int ilgis);
 void kolizijosTestavimas();
+void AvalancheTestavimas();
+void generuotiPorasSuVienuSkirtingu();
 
 int main()
 {  
@@ -92,6 +94,7 @@ void naudojimosiInstrukcija()
                 break;
             }
             case 4:{
+                 AvalancheTestavimas();
                 break;
             }
             case 5:{
@@ -342,7 +345,7 @@ void generuotiAtsitiktinesPoras()
 void kolizijosTestavimas()
 {
     int rinktis;
-    cout << "Ar norite sugeneruoti failai su atsitiktinemis poromis, ar jau turite? Jei norite, spauskite 1, jei jau turite spauskite 2:" << endl;
+    cout << "Ar norite sugeneruoti faila su atsitiktinemis poromis, ar jau turite? Jei norite, spauskite 1, jei jau turite spauskite 2:" << endl;
     cin >> rinktis;
     if(rinktis == 1)
     {
@@ -370,4 +373,91 @@ void kolizijosTestavimas()
     cout << "Viso patikrinta porų: " << poruSk << endl;
     cout << "Viso aptikta kolizijų: " << kolizijuSk << endl;
     
+}
+
+void AvalancheTestavimas()
+{
+    int rinktis;
+    cout << "Ar norite sugeneruoti faila su poromis, kuriu elementai skiriasi tik vienu simboliu, ar jau turite? Jei norite, spauskite 1, jei jau turite spauskite 2:" << endl;
+    cin >> rinktis;
+    if(rinktis == 1)
+    {
+        generuotiPorasSuVienuSkirtingu();
+    }
+    string str1, str2;
+    ifstream fd("inputForAvalanche.txt");
+    if (!fd) {
+        cerr << "Nepavyko atidaryti inputForAvalanche.txt failo" << endl;
+        return;
+        }
+    int poruSk;
+    double skirtingumasBitu = 0.0;
+    double skirtingumasHex = 0.0;
+    double minBitSkirtumas = 100.0;
+    double maxBituSkirtumas = 0.0;
+    double minxHexSkirtumas = 100.0;
+    double maxHexSkirtumas = 0.0;
+    
+    while(fd >> str1 >> str2)
+    {
+        string hash1 = hashFunkcija(str1);
+        string hash2 = hashFunkcija(str2);
+        
+    }
+    
+    fd.close();
+    
+}
+void generuotiPorasSuVienuSkirtingu()
+{
+    ofstream fr("inputForAvalanche.txt");
+    vector<int> ilgiai = {10, 100, 500, 1000};
+    for(int i = 0; i < 4; i++)
+    {
+        int ilgis = ilgiai.at(i);
+        for(int j = 0; j < 25000; ++j)
+        {
+            string str1 = gautiString(ilgis);
+            string str2 = str1;
+            int keiciamoSimboloIndeksas = rand() % ilgis;
+            str2[keiciamoSimboloIndeksas] = 'A' + (rand() % 26);
+            fr << str1 << " " << str2 << endl;
+        }
+    }
+    fr.close();
+}
+string hexToBin(string hex)
+{
+    std::unordered_map<char, std::string> hex_to_bin {
+            {'0', "0000"}, {'1', "0001"}, {'2', "0010"}, {'3', "0011"},
+            {'4', "0100"}, {'5', "0101"}, {'6', "0110"}, {'7', "0111"},
+            {'8', "1000"}, {'9', "1001"}, {'A', "1010"}, {'B', "1011"},
+            {'C', "1100"}, {'D', "1101"}, {'E', "1110"}, {'F', "1111"}
+        };
+    string bin;
+    for(char simb: hex)
+    {
+        bin += hex_to_bin[toupper(simb)];
+    }
+    return bin;
+}
+double bituLyginimas(string hashB1, string hashB2)
+{
+    double skirt = 0;
+    for(int i = 0; i < hashB1.length(); i++)
+    {
+        if(hashB1[i]!=hashB2[i])
+            skirt++;
+    }
+    return skirt;
+}
+double hexLyginimas(string hash1, string hash2)
+{
+    double skirt = 0;
+    for(int i = 0; i < hash1.length(); i++)
+    {
+        if(hash1[i]!=hash2[i])
+            skirt++;
+    }
+    return skirt;
 }
