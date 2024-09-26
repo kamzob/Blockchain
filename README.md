@@ -78,3 +78,7 @@ unsigned long long int rightRotate (unsigned long long int reiksme, unsigned lon
 ## Kolizijų testavimas
 <img width="266" alt="Screenshot 2024-09-26 at 14 26 50" src="https://github.com/user-attachments/assets/78a6d49e-0fc0-4cc6-8d02-65ebf6cb1513">
 
+## Avalnche testavimmas (lavinos efekto)
+
+<img width="438" alt="Screenshot 2024-09-26 at 18 25 00" src="https://github.com/user-attachments/assets/c2c39b39-74d5-4936-8214-f27cbc9d046f">
+
