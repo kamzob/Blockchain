@@ -1,4 +1,45 @@
 # Blockchain
+## Reikalavimai hash'ui
+
+1. Maišos funkcijos įėjimas(angl.input) gali būti bet kokio dydžio simbolių eilutė (angl. string). 
+2. Maišos funkcijos išėjimas (angl.output) visuomet yra to paties, fiksuoto dydžio rezultatas (pageidautina 256 bit'ų ilgio, t.y., 64 simbolių hex'as). 
+4. Maišos funkcija yra deterministinė,t.y.,tam pačiam įvedimui (input'ui) išvedimas (output'as) visuomet yra tas pats. 
+lietuva:
+``b5269fe5056dbf80dd03eba8dc8305089a113be6e495251c5736513782889e8e``
+6. Maišos funkcijos reikšmė/kodas (hash‘as) bet kokiai input'o reikšmei yra apskaičiuojamas greitai - efektyviai.
+7. Iš hash funkcijos rezultato (output'o) praktiškai neįmanoma atgaminti pradinio įvedimo (input'o).
+8. Maišos funkcija yra atspari "kolizijai"(angl.collisionresistance),t.y.,praktiškai neįmanoma surasti tokių dviejų skirtingų argumentų m1 != m2, kad jiems gautume tą patį hash'ą: h(m1) = h(m2).
+9. Bent minimaliai pakeitus įvedimą, pvz., vietoj "Lietuva" pateikus "lietuva", maišos funkcijos rezultatas-maišos kodas turi skirtis iš esmės, t.y., turi būti tenkinamas taip vadinamas lavinos efektas (angl. Avalanche effect).
+
+| Įvedimas | Mano hash |
+|----------|---------|
+| "Lietuva" | 83fecc92b18d67221ff253c626b6456084210d069fa0da1aaaffa5e1498aa68d |
+| "Lietuva!" | b6b87991e8a029b065444213fbe93af271b130cb60e0968a11a72d2d38fc6017 |
+| "lietuva" | b5269fe5056dbf80dd03eba8dc8305089a113be6e495251c5736513782889e8e |
+
+## Naudojimo instrukcija
+Paleidus programą gausite meniu:
+
+<img width="290" alt="Screenshot 2024-09-26 at 19 22 28" src="https://github.com/user-attachments/assets/ed36c9a2-3075-4d58-84e9-1d06741127d3">
+
+1. Paspaudus 1 - galėsite įvesti savo norimą tekstą, kurį norite hash'uoti
+2. Paspaudus 2 - Jus nukreips į skaitymo funkciją, kurioje galėsite pasirinkti, kurį failą skaityti, kad jo tekstą užhashuoti:
+   
+   <img width="482" alt="Screenshot 2024-09-26 at 19 31 54" src="https://github.com/user-attachments/assets/d14954d4-0eae-4d23-9075-422fb59c553d">
+  2.1 simbolis1.txt, simbolis2.txt - failai, sudaryti iš vieno atsitiktinai sugeneruoto simbolio   
+  
+  2.2 random1000v.txt, random1000du.txt - failai, sudaryti iš 1000 atsitiktinai sugeneruotų simbolių
+  
+  2.3 tukstsimb1.txt, tukstsimb2.txt - failai sudaryti iš 1000 simbolių, tačiau skiriasi tik vienu simboliu
+  
+  2.4 tuscias.txt - tuščias failas
+  
+3. Paspaudus 3 - bus vykdomas failų "simbolis1.txt", "simbolis2.txt", "random1000v.txt", "random1000du.txt", "tukstsimb1.txt", "tukstsimb2.txt", "tuscias.txt" generavimas
+4. Paspaudus 4 - bus atliekamas avalance (lavinos efekto) testavimas, kai bus tikrinamas hashų skirtumas hex ir bitų lygmenyje
+5. Paspaudus 5 - bus tikrinamas atsparumas kolizijai, t.y. bus tikrinama, kiek hash'ų sutampa.
+6. Paspaudus 6 - bus atliekamas laiko testavimas su failu konstitucija.txt
+7. Paspaudus 7 - programa baigia darbą.
+  
 ## Hash generatorius
 * sk1, sk2 - 64 bitų pirminių skaičių konstantos, paverstos i sesioliktaini:
 ```
@@ -55,8 +96,25 @@ unsigned long long int rightRotate (unsigned long long int reiksme, unsigned lon
   * ```ss << std::hex << std::setfill('0') << std::setw(16) << val;``` - į ss pridedamas val kaip 16 simbolių šešioliktainis skaičius
 * ``return ss.str();`` - grąžina funkcijos rezultatą.
 
+# Eksperimentinis tyrimas ir tyrimų analizė
+## Eksperimentas su testiniais failais
+### Failai sudaryti iš vieno, tačiau skirtingo simbolio
+simbolis1.txt (jame yra simbolis Y) jo hash:
+``0b20000012e7600035e2fb86c8eb75f526c77bb2f86f7caf1b849787317375b0``
+simbolis2.txt (jame yra simbolis S), jo hash:
+``0a60000011a1200082cb0d1625cd3e8b66527bfd32792d16f38ce17967a53b2e``
 
+### Failai, sudaryti iš 1000 atsitiktinių simbolių
+random1000v.txt, jo hash:
+``41b42670bf159a5601c6bf00a2defe7658775e95f68c38d72aa7f9a578ca2e1e``
+random1000du.txt, jo hash:
+a325b4fab82721cf25be3842c1b6fec67ff4502f2b891f88b596afeed57e3c2e
 
+### Failai, sudaryti iš 1000 simbolių, otarpusavyje skiriasi tik vienu simboliu viduryje:
+tukstsimb1.txt, jo hash:
+``33e3ab9a8fddc4d54a50528bc86967aaa66854ee99fd5ea44359d5941074d424``
+tukstsimb2.txt, jo hash:
+``97716e1b69488b7cf4fb018eb314048ca5bd7682c434c99d79eef62c391db677``
 
 
 ## Konstitucija testavimas
@@ -78,7 +136,19 @@ unsigned long long int rightRotate (unsigned long long int reiksme, unsigned lon
 ## Kolizijų testavimas
 <img width="266" alt="Screenshot 2024-09-26 at 14 26 50" src="https://github.com/user-attachments/assets/78a6d49e-0fc0-4cc6-8d02-65ebf6cb1513">
 
-## Avalnche testavimmas (lavinos efekto)
+## Avalanche testavimmas (lavinos efekto)
 
 <img width="438" alt="Screenshot 2024-09-26 at 18 25 00" src="https://github.com/user-attachments/assets/c2c39b39-74d5-4936-8214-f27cbc9d046f">
+
+## Trūkumai ir stiprybės
+### Stiprybės
+* Nepaisant kokio ilgio input, output'as yra vienodo ilgio (255 bitų, 64 simbolių)
+* Tas pats input, visada duoda tą patį output'ą.
+* Iš avalanche testavimo, galime teigti, kad hash tenkina lavinos efektą.
+* Su konstitucija veikia greitai.
+* Kolizijų neatsirado
+
+### Trūkumai 
+* Iš šių testų sunku nustatyti, kaip dažnai atsiranda kolizijos.
+* Hash'inant didesnius failus, programa užtrunka ilgiau. 
 
