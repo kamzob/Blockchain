@@ -39,19 +39,7 @@ int main()
 {  
     srand( static_cast<unsigned int>(time(nullptr)));
     string output;
-//    cout << hashFunkcija("lietuva") << endl;
-//    cout << hashFunkcija("Lietuva") << endl;
-//    cout << hashFunkcija("Lietuva!") << endl;
-    //cout << static_cast<unsigned long long>('a') << endl;
-    //hashinimas("Lietuva");
-    //failuGeneravimas();
-//   string input = skaityti();
-//    cout << hashFunkcija(input);
-    //cout << hashFunkcija("Lietuva");
-   //cout << hashFunkcija("lietuva");
       naudojimosiInstrukcija();
-    //cout << 4%4 << endl;
-    //skaityti();
     return 0;
 }
 void naudojimosiInstrukcija()
