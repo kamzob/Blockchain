@@ -4,12 +4,19 @@
 
 //using namespace std;
 #include "funkcijos.h"
+#include "sha256.h"
 
 int main()
 {
-    srand( static_cast<unsigned int>(time(nullptr)));
-    string output;
-      naudojimosiInstrukcija();
+//    string input = "aislas";
+//        string output1 = sha256(input);
+//     
+//        cout << "sha256('"<< input << "'):" << output1 << endl;
+//    srand( static_cast<unsigned int>(time(nullptr)));
+//    string output;
+//      naudojimosiInstrukcija();
+    manoHashVS256Hash();
+    
     return 0;
 }
 void naudojimosiInstrukcija()
@@ -450,4 +457,23 @@ double hexLyginimas(string hash1, string hash2)
             skirt++;
     }
     return skirt;
+}
+void manoHashVS256Hash()
+{
+    cout << "Input dydis    |   Mano hash     |   sha-256     |" << endl;
+    for(int i = 1; i <= 1048576; i*=2)
+    {
+        string input = gautiString(i);
+        auto start1 = std::chrono::high_resolution_clock::now();
+        string mano = hashFunkcija(input);
+        cout << "Mano hash: " << mano << endl;
+        auto end1 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> laikas1 = end1 - start1;
+        auto start2 = std::chrono::high_resolution_clock::now();
+        string sha = sha256(input);
+        cout << "256 hash: " << sha << endl;
+        auto end2 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> laikas2 = end2 - start2;
+        cout << i << "\t|\t" << laikas1.count() << "\t|\t" << laikas2.count() << endl;
+    }
 }
