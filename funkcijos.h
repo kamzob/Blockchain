@@ -27,4 +27,5 @@ void generuotiPorasSuVienuSkirtingu();
 string hexToBin(string hex);
 double bituLyginimas(string hashB1, string hashB2);
 double hexLyginimas(string hash1, string hash2);
+void manoHashVS256Hash();
 #endif /* funkcijos_h */

@@ -35,4 +35,5 @@ using std::runtime_error;
 using std::cerr;
 using std::min;
 using std::max;
+using std::setw;
 #endif /* biblioteka_h */
