@@ -42,6 +42,26 @@ Paleidus programą gausite meniu:
 7. Paspaudus 7 - programa baigia darbą.
   
 ## Hash generatorius
+### Paprastai pseudo-kodas
+1. Funkcija priima input'ą bet kokio dydžio
+2. Tada du tiesiog pirminiai dideli skaičiai paimami, užrašau juos šešioliktainiu formatu su priekyje 0x
+3. Susikuriu masyvą 4 elementų (kiekvieno dydis 64 bitai), kurių pradinės reikšmės 0
+4. Suku ciklą per inputo ilgį
+5. Skaitomam simboliui priskiriu ASCII reikšmę
+6. Suku dar vieną ciklą, kuris pereis per visus 4 masyvo elementus
+7. Atlieku XOR operaciją elemento su skaitomo simbolio ASCII reikšme
+8. Tada elementą padauginu su vienu iš pirminių skaičių
+9. TAda vykdau bitų rotaciją į kairę per 13 elementų
+10. Tada vykdau sekančio masyvo elemento bitų rotaciją dešinėn per 17 pozicijų ir atlieku XOR operaciją du dabartiniu masyvo elementu
+11. Tuomet skaitomo simbolio reikšmę padauginu iš antrojo pirminio skaičiaus
+12. Vidinis ciklas baigiasi
+13. Pagrindinis ciklas baigiasi
+14. Inicializuoju tuščią eilutę
+15. SUku ciklą per kiekvieną masyvo elementą
+16. Kiekvieną masyvo elementą pridedu į eilutę kaip 16 simbolių šešioliktainį sk
+17. Grąžinu funkcijos rezultatą
+18. Funkcija baigia darbą
+### Detaliau
 * sk1, sk2 - 64 bitų pirminių skaičių konstantos, paverstos i sesioliktaini:
 ```
   const unsigned long long sk1 = 0x100000001b3;// 1099511628211
@@ -135,10 +155,11 @@ tukstsimb2.txt, jo hash:
 | 512 | 0,00335817 | 
 
 ## Kolizijų testavimas
+Iš pradžių susigeneravau failą pagal užduoties rekomendaciją:  25 000 porų, kurių ilgis 10 simbolių, kitas 25 000 porų, kurių ilgis - 100, dar kitas 25 000 poras - 500, ir galiausiai likusias 25 000 poras, kurių ilgis - 1000 simbolių. Tada vykdomas tikrinimas: skaitoma iš failo string'ų pora, jie hashuojami. Tada tikrinami hashai: jei jie yra vienodi, tai atsiranda pranešimas: Kolizija aptikta! Ir išvedami inputai. Galiausiai patikrinus visas poras, atsiranda pranešimas kiek porų buvo patikrinta ir kiek kolizijų atsirado. Kaip matome, mano hashFunkcija veikia gerai, nes kolizijų nebuvo rasta.
 <img width="266" alt="Screenshot 2024-09-26 at 14 26 50" src="https://github.com/user-attachments/assets/78a6d49e-0fc0-4cc6-8d02-65ebf6cb1513">
 
 ## Avalanche testavimmas (lavinos efekto)
-
+Iš pradžių susigeneruoju failą "inputForAvalanche.txt", kuriame yra string'ų poros, kurios skiriasi vienu simboliu atsitiktinai parinktoje vietoje. Tada skaitau iš failo porą, sugeneruoju kiekvienam stringui po hash'ą. Vyksta lyginimas - skaičiuojamas skirtumas hex ir bitų lygmenyje. Čia šio tyrimo rezultatai:
 <img width="438" alt="Screenshot 2024-09-26 at 18 25 00" src="https://github.com/user-attachments/assets/c2c39b39-74d5-4936-8214-f27cbc9d046f">
 
 ## Trūkumai ir stiprybės
@@ -154,6 +175,10 @@ tukstsimb2.txt, jo hash:
 * Hash'inant didesnius failus, programa užtrunka ilgiau.
 
 ## Papildomos užduotys
+1. Pabandykite kaip įmanoma objektyviau palyginti Jūsų Hash funkcijos spartą su MD5 , SHA-1 , SHA-256 ar kita gerai žinoma hash funkcija. Paliekame Jums sugalvoti, kaip
+atlikti tokį palyginimą ir nuo jo objektyvumo priklausys ir bonus'o dydis.
+Tai visų pirma, susiradau [SHA-256 generatorių](http://www.zedwood.com/article/cpp-sha256-function) - .cpp ir .h failus bei juos įsidėjau į savo darbą. Na o tada vyko tyrimas. Dariau ciklą, kurio metu i didėja du kartus, o i maks. - 1048576. Tada apsibrėžiau mano hash skaičiavimo laiką ir SHA-256, jiems priskyriau 0.0 reikšmes. Buvo generuojamas string'as i ilgio. Tada ciklo viduje sukau dar vieną ciklą, kuriame stringui sukuriami hash'ai su mano funkcija ir SHA-256 bei matuojamas laikas. Po į iteracijų išvedamas laikų vidurkis milisekundėmis. Apačioje galite matyti rezultatus, o išvada būtų tokia: SHA-256 generatorius laiko atžvilgiu yra žymiai efektyvesnis
+
 |Input dydis    |   Mano hash     |   sha-256     |
 |----------|----------|---------|
 1	|	0.00485	|	0.0021584
@@ -180,3 +205,4 @@ tukstsimb2.txt, jo hash:
 
 
 <img width="1096" alt="Screenshot 2024-10-02 at 19 11 25" src="https://github.com/user-attachments/assets/edaef8e3-c0b8-4ccf-90f4-13f8e7dba5f6">
+
