@@ -8,14 +8,8 @@
 
 int main()
 {
-//    string input = "aislas";
-//        string output1 = sha256(input);
-//     
-//        cout << "sha256('"<< input << "'):" << output1 << endl;
-//    srand( static_cast<unsigned int>(time(nullptr)));
-//    string output;
-//      naudojimosiInstrukcija();
-    manoHashVS256Hash();
+    naudojimosiInstrukcija();
+
     
     return 0;
 }
@@ -31,9 +25,10 @@ void naudojimosiInstrukcija()
         cout << "4 - avalanche testavimas\n";
         cout << "5 - atsparumas kolizijai\n";
         cout << "6 - konstitucijos testavimas\n";
-        cout << "7 - baigti darba\n";
+        cout << "7 - atlikti mano hash ir sha-256 palyginima\n";
+        cout << "8 - baigti darbą\n";
         cin >> rinktis;
-        while(!cin>>rinktis || rinktis < 1 || rinktis > 7)
+        while(!cin>>rinktis || rinktis < 1 || rinktis > 8)
         {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -73,8 +68,10 @@ void naudojimosiInstrukcija()
                 konstitucijosTestavimas();
                 break;
             }
+            case 7:
+                manoHashVS256Hash();
         }
-    }while(rinktis!=7);
+    }while(rinktis!=8);
 
 
 }
