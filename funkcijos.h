@@ -30,4 +30,7 @@ double hexLyginimas(string hash1, string hash2);
 void manoHashVS256Hash();
 string druskosGeneravimas(int ilgis);
 string hashFunkcijaSuDruska(string input);
+void generuotiVienodasPoras();
+void hidingTyrimas();
+void puzzleFriendliness();
 #endif /* funkcijos_h */

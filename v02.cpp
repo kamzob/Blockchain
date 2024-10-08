@@ -9,11 +9,7 @@
 int main()
 {
     srand( static_cast<unsigned int>(time(nullptr)));
-//    naudojimosiInstrukcija();
-    for(int i = 0; i < 10; i++)
-    {
-        cout << hashFunkcijaSuDruska("Lietuva") << endl;
-    }
+    naudojimosiInstrukcija();
     
     return 0;
 }
@@ -30,13 +26,15 @@ void naudojimosiInstrukcija()
         cout << "5 - atsparumas kolizijai\n";
         cout << "6 - konstitucijos testavimas\n";
         cout << "7 - atlikti mano hash ir sha-256 palyginima\n";
-        cout << "8 - baigti darbą\n";
+        cout << "8 - atlikti hiding testavima hash su druska\n";
+        cout << "9 - atlikti puzzle-friendliness testavima hash su druska\n";
+        cout << "10 - baigti darbą\n";
         cin >> rinktis;
-        while(!cin>>rinktis || rinktis < 1 || rinktis > 8)
+        while(!cin>>rinktis || rinktis < 1 || rinktis > 10)
         {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Klaida! Turite pasirinkti nuo 1 iki 7: \n";
+            cout << "Klaida! Turite pasirinkti nuo 1 iki 10: \n";
             cin >> rinktis;
             
         }
@@ -72,10 +70,20 @@ void naudojimosiInstrukcija()
                 konstitucijosTestavimas();
                 break;
             }
-            case 7:
+            case 7:{
                 manoHashVS256Hash();
+                break;
+            }
+            case 8:{
+                hidingTyrimas();
+                break;
+            }
+            case 9:{
+                puzzleFriendliness();
+                break;
+            }
         }
-    }while(rinktis!=8);
+    }while(rinktis!=10);
 
 
 }
@@ -499,6 +507,7 @@ string druskosGeneravimas(int ilgis)
 string hashFunkcijaSuDruska(string input)
 {
     string druska = druskosGeneravimas(16);
+    //cout << druska << endl;
     string ivestis =input + druska;
     const unsigned long long sk1 = 0x100000001b3; //1099511628211 pirminis
     const unsigned long long sk2 = 0xab5351bc652b4e61;
@@ -529,5 +538,83 @@ string hashFunkcijaSuDruska(string input)
         }
     
         return ss.str();
+    
+}
+void hidingTyrimas()
+{
+    int rinktis;
+    cout << "Ar norite sugeneruoti faila su vienodomis poromis, ar jau turite? Jei norite, spauskite 1, jei jau turite spauskite 2:" << endl;
+    cin >> rinktis;
+    if(rinktis == 1)
+    {
+        generuotiVienodasPoras();
+    }
+    ifstream fd("inputForHiding.txt");
+    if (!fd) {
+        cerr << "Nepavyko atidaryti atsitiktinesporos.txt failo" << endl;
+        return;
+        }
+    string str1, str2;
+    int kolizijuSkPaprastasHash = 0;
+    int kolizijuSkHashSuSalt = 0;
+    int poruSk = 0;
+    while(fd >> str1 >> str2)
+    {
+        poruSk++;
+        string hash1 = hashFunkcija(str1);
+        string hash2 = hashFunkcija(str2);
+        if (hash1 == hash2) {
+            kolizijuSkPaprastasHash++;
+                }
+        string hashSalt1 = hashFunkcijaSuDruska(str1);
+        string hashSalt2 = hashFunkcijaSuDruska(str2);
+        if (hashSalt1 == hashSalt2) {
+            kolizijuSkHashSuSalt++;
+            cout << hashSalt1 << endl;
+            cout << hashSalt2 << endl;
+                }
+    }
+    fd.close();
+    cout << "Viso patikrinta porų: " << poruSk << endl;
+    cout << "Viso aptikta kolizijų hash be druskos: " << kolizijuSkPaprastasHash << endl;
+    cout << "Viso aptikta kolizijų hash su druska: " << kolizijuSkHashSuSalt << endl;
+}
+void generuotiVienodasPoras()
+{
+    ofstream fr("inputForHiding.txt");
+    vector<int> ilgiai = {10, 100, 500, 1000};
+    for(int i = 0; i < 4; i++)
+    {
+        int ilgis = ilgiai.at(i);
+        for(int j = 0; j < 25000; ++j)
+        {
+            string str1 = gautiString(ilgis);
+            string str2 = str1;
+            fr << str1 << " " << str2 << endl;
+        }
+    }
+    fr.close();
+}
+void puzzleFriendliness()
+{
+    string str = "myliuLTU!!";
+    string hash = hashFunkcijaSuDruska(str);
+    cout << hash << endl;
+    int bandymai = 0;
+    bool rasti = false;
+    for(int i = 0; i < 10000000; i++)
+    {
+        string bandomaIvestis = gautiString(10);
+        string hash2 = hashFunkcijaSuDruska(bandomaIvestis);
+        bandymai++;
+        if(hash==hash2)
+        {
+            cout << "Rasta ivestis generuojanti ta pati hash! Po: " << bandymai << " bandymu" << endl;
+            rasti = true;
+            break;
+        }
+    }
+    if(!rasti)
+        cout << "Po " << bandymai << " bandymu nepavyko rasti ivesties, kuri generuotu ta pati hash" << endl;
     
 }
