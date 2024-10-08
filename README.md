@@ -203,6 +203,15 @@ Tai visų pirma, susiradau [SHA-256 generatorių](http://www.zedwood.com/article
 524288	|	22.7407	|	4.77774
 1048576	|	44.5441	|	9.28443
 
-
 <img width="1096" alt="Screenshot 2024-10-02 at 19 11 25" src="https://github.com/user-attachments/assets/edaef8e3-c0b8-4ccf-90f4-13f8e7dba5f6">
+
+### 2 papildoma
+2. Parodykite,kad iš hash funkcijos rezultato (output'o) praktiškai neįmanoma atgaminti pradinio įvedimo (input'o), t. y., kaip Jūsų hash funkcijoje realizuota hiding ir puzzle-friendliness savybės. P.s. manau, kad šioje vietoje "druskos" tikrai nebus per daug :)
+#### Hiding
+Susikūriau 100000 porų failą taip: 25 000 porų, kurių ilgis 10 simbolių, kitas 25 000 porų, kurių ilgis - 100, dar kitas 25 000 poras - 500, ir galiausiai likusias 25 000 poras, kurių ilgis - 1000 simbolių. Poroje esantys string'ai vienodi. Atlikau testavimą tikrinant kolizijas, t.y tikrinau kolizijas savo paparastoje hash funkcijoje, kuri yra deterministinė ir naujoje hash funkcijoje, kur prie input'o pridedamas salt. Gavau štai tokius rezultatus:
+<img width="579" alt="Screenshot 2024-10-08 at 23 04 44" src="https://github.com/user-attachments/assets/d39fa51a-638f-49c9-895b-6a7d8e350402">
+Taigi, išvada būtų tokia: hiding su druska veikia kaip tikėtasi, nes kiekvienam input'ui, kad ir koks jis bebūtų, yra sugeneruojama unikali druska, kuri ir lemia hash skirtingumą ir kolizijų neatsiradimą. 
+
+
+
 
