@@ -8,8 +8,12 @@
 
 int main()
 {
-    naudojimosiInstrukcija();
-
+    srand( static_cast<unsigned int>(time(nullptr)));
+//    naudojimosiInstrukcija();
+    for(int i = 0; i < 10; i++)
+    {
+        cout << hashFunkcijaSuDruska("Lietuva") << endl;
+    }
     
     return 0;
 }
@@ -481,4 +485,49 @@ void manoHashVS256Hash()
         
         cout << left <<setw(12) << i << setw(10) << manoLaikas*1000/5.0<< setw(10) << shaLaikas*1000/5.0 << endl;
     }
+}
+string druskosGeneravimas(int ilgis)
+{
+    string druska;
+    for(int i = 0; i < ilgis; i++)
+    {
+        char randSimb = ' ' + rand()%95;
+        druska+=randSimb;
+    }
+    return druska;
+}
+string hashFunkcijaSuDruska(string input)
+{
+    string druska = druskosGeneravimas(16);
+    string ivestis =input + druska;
+    const unsigned long long sk1 = 0x100000001b3; //1099511628211 pirminis
+    const unsigned long long sk2 = 0xab5351bc652b4e61;
+    //12345300873145699937 pirminis sk
+    vector<unsigned long long> outputHash(4, 0);
+    for(int i = 0; i < ivestis.length(); i++)
+    {
+        char dabSimb = ivestis[i];
+        unsigned long long reiksme = static_cast<unsigned long long>(dabSimb);
+        for(int j = 0; j < 4; j++)
+        {
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j] ^= reiksme;
+//           cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j]*= sk1;
+           // cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j] = leftRotate(outputHash[j], 13);
+           // cout << (std::bitset<64>) outputHash[j] << endl;
+            outputHash[j]^=rightRotate(outputHash[(j+1)%4], 17);
+//            cout << (std::bitset<64>) outputHash[j] << endl;
+//            cout << endl;
+            reiksme *= sk2;
+        }
+    }
+    std::stringstream ss;
+    for (const auto& val : outputHash) {
+            ss << std::hex << std::setfill('0') << std::setw(16) << val;
+        }
+    
+        return ss.str();
+    
 }

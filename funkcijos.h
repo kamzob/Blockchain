@@ -28,4 +28,6 @@ string hexToBin(string hex);
 double bituLyginimas(string hashB1, string hashB2);
 double hexLyginimas(string hash1, string hash2);
 void manoHashVS256Hash();
+string druskosGeneravimas(int ilgis);
+string hashFunkcijaSuDruska(string input);
 #endif /* funkcijos_h */
