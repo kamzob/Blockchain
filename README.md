@@ -212,6 +212,8 @@ Susikūriau 100000 porų failą taip: 25 000 porų, kurių ilgis 10 simbolių, k
 <img width="579" alt="Screenshot 2024-10-08 at 23 04 44" src="https://github.com/user-attachments/assets/d39fa51a-638f-49c9-895b-6a7d8e350402">
 Taigi, išvada būtų tokia: hiding su druska veikia kaip tikėtasi, nes kiekvienam input'ui, kad ir koks jis bebūtų, yra sugeneruojama unikali druska, kuri ir lemia hash skirtingumą ir kolizijų neatsiradimą. 
 
+### puzzle-friendliness
 
+<img width="572" alt="Screenshot 2024-10-09 at 00 07 19" src="https://github.com/user-attachments/assets/916d69ad-064e-4ed8-a8e8-d5869acb08cc">
 
 
