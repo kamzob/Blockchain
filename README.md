@@ -216,3 +216,6 @@ Taigi, išvada būtų tokia: hiding su druska veikia kaip tikėtasi, nes kiekvie
 
 <img width="572" alt="Screenshot 2024-10-09 at 00 07 19" src="https://github.com/user-attachments/assets/916d69ad-064e-4ed8-a8e8-d5869acb08cc">
 Buvo paduodamas string "asmyliuLTU", gautas jo hash. Tada buvo 10 mln. bandymų generuojant atsitiktinę įvestį gauti tokį patį hash'ą. Deja, nepavyko, todėl reiškia, kad funkcija atitinka puzzle-friendliness savybę bent jau dalinai.
+
+### 3 papildoma
+Adriana Širokytė įtraukė mano hash funkciją į lenktynes ir apjungė kelių iš mūsų hash'us. Rezutltatus galite pamatyti čia: https://github.com/aran1ja/Blockchain/tree/v0.2 
